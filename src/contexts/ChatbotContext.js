@@ -3,6 +3,9 @@ import React, { createContext, useContext, useState } from 'react';
 // Create the context
 const ChatbotContext = createContext();
 
+// Export the context
+export { ChatbotContext };
+
 // Custom hook to use the chatbot context
 export const useChatbot = () => {
   const context = useContext(ChatbotContext);

@@ -2,15 +2,12 @@ import React, { useState, useContext } from 'react';
 import { ChatbotContext } from '../contexts/ChatbotContext';
 
 const Chatbot = () => {
-  const { messages, addMessage } = useContext(ChatbotContext);
+  const { chatbotState, sendMessage } = useContext(ChatbotContext);
   const [input, setInput] = useState('');
 
   const handleSend = () => {
     if (input.trim()) {
-      addMessage({ text: input, sender: 'user' });
-      setTimeout(() => {
-        addMessage({ text: 'Thank you for your message. How can I help you with your diet plan?', sender: 'bot' });
-      }, 1000);
+      sendMessage(input);
       setInput('');
     }
   };
@@ -33,20 +30,25 @@ const Chatbot = () => {
         <h3 style={{ margin: 0 }}>Diet Assistant</h3>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
-        {messages.map((msg, idx) => (
+        {chatbotState.messages.map((msg) => (
           <div 
-            key={idx} 
+            key={msg.id} 
             style={{ 
               margin: '10px 0', 
               padding: '8px', 
-              background: msg.sender === 'user' ? '#e3f2fd' : '#f5f5f5',
+              background: msg.type === 'user' ? '#e3f2fd' : '#f5f5f5',
               borderRadius: '5px',
-              textAlign: msg.sender === 'user' ? 'right' : 'left'
+              textAlign: msg.type === 'user' ? 'right' : 'left'
             }}
           >
-            {msg.text}
+            {msg.content}
           </div>
         ))}
+        {chatbotState.isTyping && (
+          <div style={{ padding: '8px', color: '#999', fontStyle: 'italic' }}>
+            Typing...
+          </div>
+        )}
       </div>
       <div style={{ padding: '10px', borderTop: '1px solid #ddd' }}>
         <input
